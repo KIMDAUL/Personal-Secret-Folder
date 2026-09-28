@@ -1,0 +1,10 @@
+# 런타임/비밀 파일 — 절대 커밋하지 마세요
+*.hc
+state.ini
+.secretvault/
+
+# 임시/로그
+*.log
+*.tmp
+Thumbs.db
+desktop.ini
