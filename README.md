@@ -70,3 +70,9 @@
 > **폴더의 사용방법이나 비밀번호 변경 방법은 제작자의 깃허브 프로젝트를 참고해주세요.**
 
 더 자세한 설명은 [`SECRET FOLDER.md`](SECRET%20FOLDER.md) 를 읽어 보세요.
+
+---
+
+## 📄 라이선스
+
+[MIT License](LICENSE) — Copyright (c) 2026 KDU
