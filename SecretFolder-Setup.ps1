@@ -301,9 +301,9 @@ function Remove-SecretFolder {
     Start-Process $vc -Wait -ArgumentList @('/u', $mounted, '/f', '/q', '/s') | Out-Null
     Start-Sleep -Milliseconds 500
 
-    # 실행 중인 스크립트 종료
+    # 실행 중인 스크립트 종료 (이 설치본의 스크립트 경로와 정확히 일치하는 것만)
     Get-CimInstance Win32_Process -Filter "Name='AutoHotkey64.exe' OR Name='AutoHotkey32.exe'" -ErrorAction SilentlyContinue |
-        Where-Object { $_.CommandLine -like '*SecretFolder.ahk*' } |
+        Where-Object { $_.CommandLine -and $_.CommandLine.Contains($Config.ScriptPath) } |
         ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
 
     Remove-Item $Config.StartupLnk -Force -ErrorAction SilentlyContinue
@@ -515,6 +515,9 @@ function Invoke-SelfTest {
 
     $tmpRoot = Join-Path $env:TEMP ('sf_selftest_' + [Guid]::NewGuid().ToString('N').Substring(0,8))
     $cfg = Get-Config -InstallRoot $tmpRoot
+    # 자체 점검이 실제 시작/바탕화면 바로가기를 건드리지 않도록 임시 경로로 격리
+    $cfg.StartupLnk = Join-Path $tmpRoot 'SecretFolder.lnk'
+    $cfg.DesktopLnk = Join-Path $tmpRoot 'SECRET.lnk'
     Write-Host "temp root: $tmpRoot"
     try {
         New-Vault -Config $cfg -SizeGB 1 -Password 'test1234' -Log { param($m) Write-Host "    $m" }
